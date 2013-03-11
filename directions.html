@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Just Take Colfax</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Site advocating taking Colfax Avenue in Denver, Colorado (even when it's the worst possible route)">
+    <meta name="author" content="Ben Limmer">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 100px;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+      }
+
+      .container-fluid,
+      .row-fluid { height: inherit; }
+
+      .calloutSpacer {
+        margin-top: 40px;
+        margin-bottom: 40px;
+      }
+
+      .push {
+        height: 40px;
+      }
+
+      #mapCanvas {
+        height: 80%;
+      }
+    </style>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="ico/favicon.ico">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="index.html">Just Take Colfax</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="index.html">Home</a></li>
+              <li class="active"><a href="directions.html">Directions</a></li>
+              <!-- Coming soon -->
+              <!--
+              <li><a href="traffic.html">Traffic</a></li>
+              -->
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="offset2 span8 offset2" id="mapCanvas">
+
+        </div>
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+<!--       <div class="hero-unit">
+        <h1>The choice is clear ... just take Colfax!</h1>
+        <p class="lead">
+          No matter where you're trying to go in Denver, it just makes sense to take Colfax. That's science and you can't argue with science.
+        </p>
+        <p><a href="#" onclick="calculateRoute();" class="btn btn-success btn-large pull-right">Let's Drive &raquo;</a></p>
+      </div>
+
+      <div class="row calloutSpacer">
+        <div class="offset2 span8 offset2">
+          <blockquote>
+            <p>
+              "I usually take C-470 whenever I can, but when I'm downtown I always take Colfax"
+              <small>Mike Chambliss, Driver</small>
+            </p>
+          </blockquote>
+        </div>
+      </div>
+      <div class="push"></div> -->
+
+      <hr>
+
+      <footer>
+        <p><a href="http://l1m5.com">Ben Limmer</a> 2013</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <!-- Try CDN or fallback to local jQuery -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+    <script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
+    <script src="js/bootstrap.js"></script>
+    <!--<script type="text/javascript"
+       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABDmoEuUD4r0Tn6uUETo6zwxeWiZhwt-E&sensor=true"> -->
+    <script type="text/javascript"
+       src="https://maps.googleapis.com/maps/api/js?key=&sensor=true">
+    </script>
+    <script src="js/directions.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        initializeMap();
+      });
+    </script>
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39185311-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+  </body>
+</html>
