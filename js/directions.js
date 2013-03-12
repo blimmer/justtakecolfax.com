@@ -11,6 +11,12 @@ app.directions = {
 	}
 }
 
+function assignOnClicks() {
+	$("#routeButton").on('click', function() {
+		getDirections($('#inputStartAddress').val(), $('#inputEndAddress').val());
+	});
+}
+
 function initializeMap() {
 	var map = app.directions.map;
 	var mapOptions = {
@@ -20,14 +26,12 @@ function initializeMap() {
 	}
 	map = new google.maps.Map(document.getElementById('mapCanvas'), mapOptions);
 	app.directions.directionsDisplay.setMap(map);
-
-	getDirections();
 }
 
-function getDirections() {
+function getDirections(startAddress, endAddress) {
 	var directionsRequest = {
-		origin: "1900 16th street denver, co 80202",
-		destination: "3 S Broadway Denver, CO 80209",
+		origin: startAddress,
+		destination: endAddress,
 		travelMode: google.maps.TravelMode.DRIVING,
 		unitSystem: google.maps.UnitSystem.IMPERIAL,
 		waypoints: [
@@ -41,7 +45,8 @@ function getDirections() {
 		if (status == google.maps.DirectionsStatus.OK) {
 			app.directions.directionsDisplay.setDirections(response);
 		} else {
-			alert("status was not OK!");
+			// TODO: class this up, for goodness sake
+			alert("status was not OK! " + status);
 		}
 	});
 }

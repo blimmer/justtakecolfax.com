@@ -57,6 +57,32 @@
       </div>
     </div>
 
+    <div class="container">
+      <div class="row">
+        <div class="span4">
+          <form class="form-horizontal">
+            <div class="control-group">
+              <label class="control-label" for="inputStartAddress">Start</label>
+              <div class="controls">
+                <input type="text" id="inputStartAddress" placeholder="Starting Address">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputEndAddress">End</label>
+              <div class="controls">
+                <input type="text" id="inputEndAddress" placeholder="Ending Address">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <a href="#" id="routeButton" class="btn">Route</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="offset2 span8 offset2" id="mapCanvas">
@@ -92,6 +118,7 @@
 
     <script type="text/javascript">
       $(function() {
+        assignOnClicks();
         initializeMap();
       });
     </script>
