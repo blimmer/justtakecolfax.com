@@ -1,17 +1,25 @@
-var directionDisplay;
-var directionsService = new google.maps.DirectionsService();
-var map;
+var app = app || {};
+
+app.directions = {
+	directionsService:new google.maps.DirectionsService(),
+	directionsDisplay:new google.maps.DirectionsRenderer({
+		suppressMarkers: true
+	}),
+	places: {
+		denver: new google.maps.LatLng(39.737818, -104.984665),
+		capitol: new google.maps.LatLng(39.7400447, -104.9844157)
+	}
+}
 
 function initializeMap() {
-	directionsDisplay = new google.maps.DirectionsRenderer();
-	var denver = new google.maps.LatLng(39.737818, -104.984665);
+	var map = app.directions.map;
 	var mapOptions = {
 	  zoom: 10,
 	  mapTypeId: google.maps.MapTypeId.ROADMAP,
-	  center: denver
+	  center: app.directions.places.denver
 	}
 	map = new google.maps.Map(document.getElementById('mapCanvas'), mapOptions);
-	directionsDisplay.setMap(map);
+	app.directions.directionsDisplay.setMap(map);
 
 	getDirections();
 }
@@ -24,14 +32,14 @@ function getDirections() {
 		unitSystem: google.maps.UnitSystem.IMPERIAL,
 		waypoints: [
 			{
-				location:"200 E Colfax Ave, Denver, CO 80203", //capitol building
+				location:app.directions.places.capitol,
 				stopover:true
 			}
 		]
 	}
-	directionsService.route(directionsRequest, function(response, status) {
+	app.directions.directionsService.route(directionsRequest, function(response, status) {
 		if (status == google.maps.DirectionsStatus.OK) {
-			directionsDisplay.setDirections(response);
+			app.directions.directionsDisplay.setDirections(response);
 		} else {
 			alert("status was not OK!");
 		}
