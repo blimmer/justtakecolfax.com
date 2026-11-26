@@ -23,12 +23,26 @@ Both keys need the **Maps JavaScript API**, **Routes API**, and **Places API (Ne
 
 ## Commands
 
-| Command        | Action                                          |
-| -------------- | ----------------------------------------------- |
-| `pnpm dev`     | Start the dev server at `localhost:4321`        |
-| `pnpm build`   | Type-check and build the static site to `dist/` |
-| `pnpm preview` | Preview the production build                    |
-| `pnpm format`  | Format with Prettier                            |
+| Command          | Action                                          |
+| ---------------- | ----------------------------------------------- |
+| `pnpm dev`       | Start the dev server at `localhost:4321`        |
+| `pnpm build`     | Type-check and build the static site to `dist/` |
+| `pnpm preview`   | Preview the production build                    |
+| `pnpm format`    | Format with Prettier                            |
+| `pnpm test:unit` | Run the Vitest unit tests                       |
+| `pnpm test:e2e`  | Run the Playwright tests against `dist/`        |
+
+## Testing
+
+- **Unit tests** (Vitest) live next to the code in `src/`. Browser code takes its Google Maps libraries, logger, and timers from a `Context` (`src/scripts/context.ts`). Tests pass fakes through `createTestContext` and render real components with Astro's container API, so they never call Google.
+- **End-to-end tests** (Playwright) in `tests/` run against `pnpm preview`, so they see the production Content Security Policy. Build first, and install browsers once with `pnpm exec playwright install`:
+
+  ```sh
+  pnpm build
+  pnpm test:e2e
+  ```
+
+  The tests block every request that leaves the preview server, so they don't use Google Maps quota.
 
 ## Deployment
 

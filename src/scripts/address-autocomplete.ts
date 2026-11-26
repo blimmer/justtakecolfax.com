@@ -1,3 +1,4 @@
+import type { Context } from "./context";
 import { query } from "./dom";
 
 const MIN_INPUT_LENGTH = 3;
@@ -19,11 +20,16 @@ type SuggestionOptions = Omit<
  * https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
  */
 export function addressAutocomplete(
+  ctx: Context,
   input: HTMLInputElement,
   popup: HTMLElement,
-  places: google.maps.PlacesLibrary,
   options: SuggestionOptions,
 ): () => Address {
+  const {
+    google: { places },
+    logger,
+    timers,
+  } = ctx;
   const listbox = query(popup, "[role=listbox]", HTMLUListElement);
   popup.append(
     new places.PlaceAttributionElement({ darkSchemeColor: "WHITE" }),
@@ -56,7 +62,7 @@ export function addressAutocomplete(
   };
 
   const close = () => {
-    window.clearTimeout(debounce);
+    timers.clearTimeout(debounce);
     latestRequest++;
     popup.hidden = true;
     input.ariaExpanded = "false";
@@ -111,7 +117,7 @@ export function addressAutocomplete(
       render();
     } catch (error) {
       // Typed addresses still route when suggestions fail (e.g. quota).
-      console.warn(error);
+      logger.warn(error);
       if (request === latestRequest) close();
     }
   };
@@ -121,7 +127,7 @@ export function addressAutocomplete(
     close();
     const text = input.value.trim();
     if (text.length < MIN_INPUT_LENGTH) return;
-    debounce = window.setTimeout(
+    debounce = timers.setTimeout(
       () => void fetchSuggestions(text),
       DEBOUNCE_MS,
     );
