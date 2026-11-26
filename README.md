@@ -29,3 +29,7 @@ Both keys need the **Maps JavaScript API**, **Routes API**, and **Places API (Ne
 | `pnpm build`   | Type-check and build the static site to `dist/` |
 | `pnpm preview` | Preview the production build                    |
 | `pnpm format`  | Format with Prettier                            |
+
+## Deployment
+
+Pushes to `main` build the site and sync `dist/` to S3 behind CloudFront.
