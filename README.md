@@ -10,9 +10,16 @@ Requires [mise](https://mise.jdx.dev), which installs the pinned Node and pnpm v
 
 ```sh
 mise install
-pnpm install
+mise run setup # installs dependencies and creates .env
 pnpm dev
 ```
+
+The directions page reads its browser Google Maps key from `GOOGLE_MAPS_API_KEY` at build time. Keys aren't committed:
+
+- **Development:** a key that allows the `http://localhost:4321/*` referrer, in the gitignored `.env`. `mise run setup` creates `.env` from `.env.example`; [create your own key](https://developers.google.com/maps/documentation/javascript/get-api-key) and add it there. If the [1Password CLI](https://developer.1password.com/docs/cli/) can read the maintainer's dev key, setup writes that key instead, and each run refreshes it.
+- **Production:** a justtakecolfax.com-only key, stored as the `GOOGLE_MAPS_API_KEY` Actions secret.
+
+Both keys need the **Maps JavaScript API** and **Routes API**.
 
 ## Commands
 

@@ -1,0 +1,273 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const fields = [
+  { name: "start", label: "Start", placeholder: "Starting address" },
+  { name: "end", label: "End", placeholder: "Ending address" },
+];
+---
+
+<BaseLayout title="Directions | Just Take Colfax">
+  <colfax-directions class="container">
+    <section class="page-head">
+      <h1>Directions</h1>
+      <p>
+        Tell us where you're going. We already know how you're getting there.
+      </p>
+    </section>
+
+    <section class="register" aria-labelledby="register-title">
+      <h2 id="register-title">Your Trip</h2>
+      <form>
+        {fields.map(({ name, label, placeholder }) => (
+          <div class="field">
+            <label for={name}>{label}</label>
+            <input
+              id={name}
+              name={name}
+              type="text"
+              placeholder={placeholder}
+              autocomplete="off"
+              data-1p-ignore
+              required
+            />
+          </div>
+        ))}
+        <button type="submit" class="button" disabled>
+          Route
+        </button>
+      </form>
+    </section>
+
+    <p class="status" role="status"></p>
+
+    <div class="map-frame">
+      <div class="map" data-map></div>
+    </div>
+
+    <dl class="folio" data-trip-summary hidden>
+      <div class="colfax">
+        <dt>Drive time</dt>
+        <dd data-drive-time></dd>
+      </div>
+      <div>
+        <dt>Alternatives considered</dt>
+        <dd>0</dd>
+      </div>
+    </dl>
+  </colfax-directions>
+</BaseLayout>
+
+<script>
+  import { ColfaxDirections } from "../scripts/directions";
+
+  customElements.define("colfax-directions", ColfaxDirections);
+</script>
+
+<style>
+  colfax-directions {
+    display: block;
+  }
+
+  .page-head {
+    padding-block: 3rem 2.25rem;
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-script);
+    font-weight: 400;
+    font-size: clamp(3.25rem, 8vw, 5rem);
+    line-height: 1.1;
+    color: var(--color-cyan-core);
+    text-shadow: var(--glow-cyan);
+  }
+
+  .page-head p {
+    margin: 0.5rem 0 0;
+    font-size: 1.35rem;
+  }
+
+  .register {
+    position: relative;
+    padding: 1.5rem;
+    border: 1px solid var(--color-edge);
+    border-radius: var(--radius);
+    background:
+      linear-gradient(rgb(255 255 255 / 0.03), rgb(255 255 255 / 0)),
+      var(--color-night-2);
+  }
+
+  .register h2 {
+    position: absolute;
+    top: -0.85rem;
+    left: 1.25rem;
+    margin: 0;
+    padding: 0 0.6rem;
+    background: var(--color-night);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-pink-core);
+    text-shadow: 0 0 6px var(--color-pink);
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 1rem 1.25rem;
+  }
+
+  .field {
+    display: grid;
+    flex: 1 1 16rem;
+    gap: 0.35rem;
+  }
+
+  label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  input {
+    min-width: 0;
+    padding: 0.65rem 0.9rem;
+    border: 2px solid var(--color-edge-2);
+    border-radius: 10px;
+    font: inherit;
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: #fff;
+    background: #0a080d;
+  }
+
+  input::placeholder {
+    color: var(--color-muted);
+  }
+
+  input:focus-visible {
+    outline: none;
+    border-color: var(--color-cyan-core);
+    box-shadow:
+      0 0 6px var(--color-cyan),
+      0 0 16px rgb(46 230 255 / 0.5);
+  }
+
+  form .button {
+    padding-block: 0.55rem;
+  }
+
+  .status {
+    margin: 1.75rem 0;
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--color-amber-core);
+  }
+
+  .map-frame {
+    position: relative;
+    overflow: hidden;
+    height: min(70vh, 620px);
+    min-height: 420px;
+    border: 3px solid var(--color-pink-core);
+    border-radius: var(--radius);
+    background: var(--color-map);
+    box-shadow:
+      0 0 8px var(--color-pink),
+      0 0 26px rgb(255 46 136 / 0.45);
+  }
+
+  .map {
+    height: 100%;
+  }
+
+  .folio {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 1.75rem 0 0;
+    border: 1px solid var(--color-edge);
+    border-radius: var(--radius);
+    background: var(--color-night-2);
+  }
+
+  .folio[hidden] {
+    display: none;
+  }
+
+  .folio div {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    padding: 1.1rem 1rem;
+    text-align: center;
+  }
+
+  .folio div + div {
+    border-left: 1px dashed var(--color-edge-2);
+  }
+
+  dd {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-cyan-core);
+    text-shadow:
+      0 0 6px var(--color-cyan),
+      0 0 16px var(--color-cyan);
+  }
+
+  .colfax dd {
+    color: var(--color-pink-core);
+    text-shadow:
+      0 0 6px var(--color-pink),
+      0 0 16px var(--color-pink);
+  }
+
+  dt {
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  @media (max-width: 640px) {
+    .page-head {
+      padding-block: 2rem;
+    }
+
+    .register {
+      padding: 1.5rem 1rem 1rem;
+    }
+
+    form .button {
+      width: 100%;
+    }
+
+    .status {
+      font-size: 1.25rem;
+    }
+
+    .map-frame {
+      height: 480px;
+    }
+
+    .folio {
+      grid-template-columns: 1fr;
+    }
+
+    .folio div + div {
+      border-left: 0;
+      border-top: 1px dashed var(--color-edge-2);
+    }
+  }
+</style>

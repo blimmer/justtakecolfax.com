@@ -1,11 +1,19 @@
 // @ts-check
 import sitemap from "@astrojs/sitemap";
-import { defineConfig, fontProviders } from "astro/config";
+import { defineConfig, envField, fontProviders } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://justtakecolfax.com",
   trailingSlash: "always",
+  env: {
+    schema: {
+      GOOGLE_MAPS_API_KEY: envField.string({
+        context: "client",
+        access: "public",
+      }),
+    },
+  },
   fonts: [
     {
       provider: fontProviders.google(),
