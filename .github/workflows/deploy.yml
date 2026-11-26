@@ -10,7 +10,6 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write # required for OIDC role assumption
   contents: read
 
 concurrency:
@@ -18,8 +17,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  checks:
+    uses: ./.github/workflows/build.yml
+
   deploy:
+    needs: checks
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required for OIDC role assumption
+      contents: read
     env:
       S3_BUCKET_URL: ${{ secrets.S3_BUCKET_URL }}
       CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
