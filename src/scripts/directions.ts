@@ -1,5 +1,6 @@
 import { importLibrary, setOptions } from "@googlemaps/js-api-loader";
 import { GOOGLE_MAPS_API_KEY } from "astro:env/client";
+import { addressAutocomplete } from "./address-autocomplete";
 import { colfaxWaypoints } from "./colfax";
 import { query } from "./dom";
 
@@ -44,11 +45,13 @@ export class ColfaxDirections extends HTMLElement {
     let core: google.maps.CoreLibrary;
     let maps: google.maps.MapsLibrary;
     let routes: google.maps.RoutesLibrary;
+    let places: google.maps.PlacesLibrary;
     try {
-      [core, maps, routes] = await Promise.all([
+      [core, maps, routes, places] = await Promise.all([
         importLibrary("core"),
         importLibrary("maps"),
         importLibrary("routes"),
+        importLibrary("places"),
       ]);
     } catch {
       status.textContent = "Google Maps didn't load. Try refreshing the page.";
@@ -77,7 +80,11 @@ export class ColfaxDirections extends HTMLElement {
 
     const addressReader = (name: string) => {
       const input = query(form, `input[name=${name}]`, HTMLInputElement);
-      return () => input.value.trim();
+      const popup = query(form, `[data-suggestions=${name}]`, HTMLElement);
+      return addressAutocomplete(input, popup, places, {
+        includedRegionCodes: ["us"],
+        locationBias: { center: DENVER, radius: 40_000 },
+      });
     };
     const readStart = addressReader("start");
     const readEnd = addressReader("end");
