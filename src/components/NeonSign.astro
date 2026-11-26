@@ -1,0 +1,76 @@
+---
+interface Props {
+  tone: "pink" | "cyan" | "amber";
+  buzz?: boolean;
+}
+
+const { tone, buzz = false } = Astro.props;
+---
+
+<span class:list={["sign", tone, { buzz }]}>
+  <slot />
+</span>
+
+<style>
+  .sign {
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    border: 3px solid var(--core);
+    border-radius: 10px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--core);
+    text-shadow:
+      0 0 2px #fff,
+      0 0 6px var(--tube),
+      0 0 14px var(--tube),
+      0 0 32px var(--tube);
+    box-shadow:
+      0 0 8px var(--tube),
+      0 0 20px var(--tube),
+      inset 0 0 8px var(--tube);
+  }
+
+  .pink {
+    --core: var(--color-pink-core);
+    --tube: var(--color-pink);
+  }
+
+  .cyan {
+    --core: var(--color-cyan-core);
+    --tube: var(--color-cyan);
+  }
+
+  .amber {
+    --core: var(--color-amber-core);
+    --tube: var(--color-amber);
+  }
+
+  .buzz {
+    animation: buzz 5s infinite;
+  }
+
+  @keyframes buzz {
+    0%,
+    96%,
+    98%,
+    100% {
+      opacity: 1;
+    }
+    97% {
+      opacity: 0.4;
+    }
+    99% {
+      opacity: 0.6;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .buzz {
+      animation: none;
+    }
+  }
+</style>

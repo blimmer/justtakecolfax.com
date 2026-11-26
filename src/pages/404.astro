@@ -1,0 +1,45 @@
+---
+import NeonSign from "../components/NeonSign.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="No Vacancy | Just Take Colfax" noindex>
+  <section class="container">
+    <NeonSign tone="pink" buzz>
+      No vacancy
+    </NeonSign>
+    <h1>Room 404 doesn't exist.</h1>
+    <p>
+      We checked every floor. This page isn't here, but Colfax still is, and
+      it'll get you wherever you were going.
+    </p>
+    <a href="/directions/" class="button">
+      Back on Colfax &raquo;
+    </a>
+  </section>
+</BaseLayout>
+
+<style>
+  section {
+    display: grid;
+    justify-items: center;
+    gap: 1.5rem;
+    padding-block: 5rem 2rem;
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--color-cyan-core);
+    text-shadow: var(--glow-cyan);
+  }
+
+  p {
+    max-width: 32rem;
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,144 @@
+---
+interface Props {
+  label: string;
+  items: string[];
+}
+
+const { label, items } = Astro.props;
+---
+
+<colfax-ticker class="ticker">
+  <div class="track">
+    <ul aria-label={label}>
+      {items.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+    <ul class="repeat" aria-hidden="true">
+      {items.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+  </div>
+  <button
+    type="button"
+    class="pause"
+    aria-label="Pause scrolling"
+    aria-pressed="false"
+  ></button>
+</colfax-ticker>
+
+<script>
+  class ColfaxTicker extends HTMLElement {
+    connectedCallback() {
+      const button = this.querySelector("button");
+      button?.addEventListener("click", () => {
+        const paused = button.ariaPressed !== "true";
+        button.ariaPressed = String(paused);
+      });
+    }
+  }
+
+  customElements.define("colfax-ticker", ColfaxTicker);
+</script>
+
+<style>
+  .ticker {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-block: 6px dotted var(--color-amber-core);
+    background: #120e15;
+    filter: drop-shadow(0 0 6px rgb(255 180 58 / 0.55));
+  }
+
+  .track {
+    display: flex;
+    width: max-content;
+    animation: scroll 40s linear infinite;
+  }
+
+  .ticker:hover .track,
+  .ticker:focus-within .track,
+  .ticker:has([aria-pressed="true"]) .track {
+    animation-play-state: paused;
+  }
+
+  .pause {
+    position: absolute;
+    inset-block: 0;
+    right: 0;
+    width: 3.25rem;
+    border: 0;
+    border-left: 1px solid var(--color-edge-2);
+    font: inherit;
+    font-size: 1.1rem;
+    color: var(--color-amber-core);
+    background: #120e15;
+    cursor: pointer;
+  }
+
+  .pause::before {
+    content: "";
+    display: block;
+    width: 0.75rem;
+    height: 0.9rem;
+    margin: auto;
+    border-inline: 0.25rem solid currentColor;
+  }
+
+  .pause[aria-pressed="true"]::before {
+    border: 0;
+    background: currentColor;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+
+  .pause:focus-visible {
+    outline-offset: -4px;
+  }
+
+  ul {
+    display: flex;
+    gap: 2.25rem;
+    margin: 0;
+    padding: 0.85rem 1.125rem;
+    list-style: none;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-amber-core);
+    text-shadow: 0 0 6px var(--color-amber);
+  }
+
+  li::after {
+    content: "\2605";
+    margin-left: 2.25rem;
+    color: var(--color-pink);
+  }
+
+  @keyframes scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track {
+      width: auto;
+      animation: none;
+    }
+
+    ul {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.25rem 2.25rem;
+    }
+
+    .repeat,
+    .pause {
+      display: none;
+    }
+  }
+</style>
