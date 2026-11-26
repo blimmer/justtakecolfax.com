@@ -1,0 +1,307 @@
+---
+type Point = [number, number];
+
+const arrow: Point[] = [
+  [16, 336],
+  [66, 300],
+  [66, 318],
+  [292, 318],
+  [292, 354],
+  [66, 354],
+  [66, 372],
+];
+
+const bulbSpacing = 15;
+const nextCorners = [...arrow.slice(1), ...arrow.slice(0, 1)];
+const bulbs = arrow.flatMap(([x1, y1], i) => {
+  const next = nextCorners[i];
+  if (!next) return [];
+  const [x2, y2] = next;
+  const steps = Math.round(Math.hypot(x2 - x1, y2 - y1) / bulbSpacing);
+  return Array.from({ length: steps }, (_, step) => ({
+    x: x1 + ((x2 - x1) * step) / steps,
+    y: y1 + ((y2 - y1) * step) / steps,
+  }));
+});
+
+const star = { x: 332, y: 40 };
+const spikes = Array.from({ length: 12 }, (_, i) => {
+  const angle = (i * Math.PI) / 6;
+  const length = i % 2 ? 20 : 34;
+  return {
+    x: star.x + Math.cos(angle) * length,
+    y: star.y + Math.sin(angle) * length,
+  };
+});
+
+const blade = ["M", "O", "T", "E", "L"];
+
+const glows = ["pink", "red", "cyan", "amber"];
+---
+
+<div class="sign" aria-hidden="true">
+  <svg viewBox="0 0 420 560">
+    <defs>
+      {glows.map((glow) => (
+        <filter
+          id={`motel-sign-glow-${glow}`}
+          x="-50%"
+          y="-50%"
+          width="200%"
+          height="200%"
+        >
+          <feFlood class={`flood-${glow}`} result="color" />
+          <feComposite in="color" in2="SourceAlpha" operator="in" />
+          <feMorphology operator="dilate" radius="1" result="tube" />
+          <feGaussianBlur in="tube" stdDeviation="3" result="near" />
+          <feGaussianBlur in="tube" stdDeviation="9" result="far" />
+          <feMerge>
+            <feMergeNode in="far" />
+            <feMergeNode in="near" />
+            <feMergeNode in="tube" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      ))}
+      <linearGradient id="motel-sign-pole" x1="0" x2="1">
+        <stop offset="0" stop-color="#1b1620" />
+        <stop offset="0.4" stop-color="#4a4152" />
+        <stop offset="1" stop-color="#1b1620" />
+      </linearGradient>
+    </defs>
+
+    <rect
+      class="pole"
+      x="320"
+      y="400"
+      width="24"
+      height="160"
+      fill="url(#motel-sign-pole)"
+    ></rect>
+
+    <g class="starburst" filter="url(#motel-sign-glow-amber)">
+      {spikes.map(({ x, y }) => (
+        <line x1={star.x} y1={star.y} x2={x} y2={y} />
+      ))}
+      <circle cx={star.x} cy={star.y} r="6"></circle>
+    </g>
+    <rect class="stem" x="328" y="60" width="8" height="32"></rect>
+
+    <path class="blade" d="M292 112 L332 88 L372 112 V410 H292 Z"></path>
+    <path class="blade-trim" d="M300 116 L332 97 L364 116 V402 H300 Z"></path>
+    <g class="blade-letters" filter="url(#motel-sign-glow-red)">
+      {blade.map((letter, i) => (
+        <text x="332" y={168 + i * 54}>
+          {letter}
+        </text>
+      ))}
+    </g>
+
+    <polygon
+      class="panel"
+      points="6,232 54,152 302,120 302,262 54,304"
+    ></polygon>
+    <polygon
+      class="panel-trim"
+      points="22,232 60,164 290,134 290,252 60,292"
+    ></polygon>
+    <g transform="rotate(-7 170 220)">
+      <text class="name" x="168" y="222" filter="url(#motel-sign-glow-pink)">
+        Colfax
+      </text>
+      <text class="inn" x="172" y="258" filter="url(#motel-sign-glow-cyan)">
+        MOTOR INN
+      </text>
+    </g>
+
+    <polygon class="arrow" points={arrow.join(" ")}></polygon>
+    {bulbs.map(({ x, y }, i) => (
+      <circle class={`bulb chase-${i % 3}`} cx={x} cy={y} r="4" />
+    ))}
+
+    <g class="chains">
+      <line x1="96" y1="372" x2="96" y2="404"></line>
+      <line x1="244" y1="372" x2="244" y2="404"></line>
+    </g>
+    <rect class="vacancy" x="74" y="402" width="192" height="52" rx="6"></rect>
+    <text class="vacancy-text" x="170" y="438">
+      <tspan class="unlit">NO</tspan>
+      <tspan class="lit" dx="10" filter="url(#motel-sign-glow-pink)">
+        VACANCY
+      </tspan>
+    </text>
+  </svg>
+</div>
+
+<style>
+  .flood-pink {
+    flood-color: var(--color-pink);
+  }
+
+  .flood-red {
+    flood-color: var(--color-neon-red);
+  }
+
+  .flood-cyan {
+    flood-color: var(--color-cyan);
+  }
+
+  .flood-amber {
+    flood-color: var(--color-amber);
+  }
+
+  .sign {
+    display: grid;
+    justify-items: center;
+  }
+
+  svg {
+    width: min(100%, 25rem);
+    overflow: visible;
+  }
+
+  text {
+    text-anchor: middle;
+  }
+
+  .starburst line {
+    stroke: var(--color-amber-core);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  .starburst circle {
+    fill: var(--color-amber-core);
+  }
+
+  .stem {
+    fill: #4a4152;
+  }
+
+  .blade {
+    fill: #7a1626;
+    stroke: #2a0a10;
+    stroke-width: 3;
+  }
+
+  .blade-trim,
+  .panel-trim {
+    fill: none;
+    stroke: #e9dcb8;
+    stroke-width: 3;
+    opacity: 0.55;
+  }
+
+  .blade-letters text {
+    font-family: var(--font-body);
+    font-size: 52px;
+    font-weight: 700;
+    fill: #ffe3e6;
+  }
+
+  .panel {
+    fill: #0f5560;
+    stroke: #08262b;
+    stroke-width: 3;
+  }
+
+  .name {
+    font-family: var(--font-script);
+    font-size: 88px;
+    fill: var(--color-pink-core);
+  }
+
+  .inn {
+    font-family: var(--font-body);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    fill: var(--color-cyan-core);
+  }
+
+  .arrow {
+    fill: #3a1d14;
+    stroke: #1a0d09;
+    stroke-width: 3;
+    stroke-linejoin: round;
+  }
+
+  .bulb {
+    fill: var(--color-amber-core);
+    filter: drop-shadow(0 0 3px var(--color-amber));
+    animation: chase 0.9s steps(1) infinite;
+  }
+
+  .chase-1 {
+    animation-delay: -0.3s;
+  }
+
+  .chase-2 {
+    animation-delay: -0.6s;
+  }
+
+  .chains line {
+    stroke: #4a4152;
+    stroke-width: 3;
+    stroke-dasharray: 5 3;
+  }
+
+  .vacancy {
+    fill: #0a080d;
+    stroke: var(--color-edge-2);
+    stroke-width: 2;
+  }
+
+  .vacancy-text {
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+  }
+
+  .lit {
+    fill: var(--color-pink-core);
+  }
+
+  .unlit {
+    fill: var(--color-tube-off);
+    animation: flicker 7s infinite;
+  }
+
+  @keyframes chase {
+    0% {
+      fill: var(--color-tube-off);
+      filter: none;
+    }
+    33% {
+      fill: var(--color-amber-core);
+    }
+  }
+
+  @keyframes flicker {
+    0%,
+    88%,
+    90%,
+    92%,
+    100% {
+      fill: var(--color-tube-off);
+    }
+    89%,
+    91% {
+      fill: var(--color-pink-core);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .unlit,
+    .bulb {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 820px) {
+    svg {
+      width: min(100%, 16rem);
+    }
+  }
+</style>

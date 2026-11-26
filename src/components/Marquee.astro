@@ -1,0 +1,110 @@
+---
+interface Props {
+  heading: string;
+  quote: string;
+  cite: string;
+}
+
+const { heading, quote, cite } = Astro.props;
+---
+
+<div class="frame">
+  <h2>{heading}</h2>
+  <figure>
+    <blockquote>
+      <p>"{quote}"</p>
+    </blockquote>
+    <figcaption>{cite}</figcaption>
+  </figure>
+</div>
+
+<style>
+  .frame {
+    max-width: 54rem;
+    margin-inline: auto;
+    padding: 1rem;
+    border: 9px dotted var(--color-amber-core);
+    border-radius: 8px;
+    background: #1a141e;
+    filter: drop-shadow(0 0 8px rgb(255 180 58 / 0.6));
+  }
+
+  h2 {
+    margin: 0 0 0.75rem;
+    text-align: center;
+    font-family: var(--font-sign);
+    font-weight: 400;
+    font-size: clamp(1.4rem, 4vw, 2.1rem);
+    letter-spacing: 0.05em;
+    color: var(--color-pink-core);
+    text-shadow: var(--glow-pink);
+  }
+
+  figure {
+    --line: 2.6rem;
+    --quote-size: clamp(1.35rem, 3vw, 1.9rem);
+    --caption-size: 1.1rem;
+    --rail: calc(var(--line) / 2 + 0.36 * var(--quote-size) + 0.15rem);
+    margin: 0;
+    padding: calc(var(--line) / 2) 1.5rem;
+    border-radius: 4px;
+    text-align: center;
+    background:
+      repeating-linear-gradient(
+          to bottom,
+          transparent 0 var(--rail),
+          rgb(0 0 0 / 0.16) var(--rail) calc(var(--rail) + 2px),
+          rgb(255 255 255 / 0.55) calc(var(--rail) + 2px)
+            calc(var(--rail) + 3px),
+          transparent calc(var(--rail) + 3px) var(--line)
+        )
+        content-box,
+      linear-gradient(var(--color-letterboard), #e6dfc6) padding-box;
+    background-clip: padding-box;
+    box-shadow: inset 0 0 30px rgb(255 240 200 / 0.8);
+  }
+
+  blockquote {
+    margin: 0;
+    font-size: var(--quote-size);
+    font-weight: 700;
+    line-height: var(--line);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-letter);
+  }
+
+  blockquote p {
+    margin: 0;
+  }
+
+  figcaption {
+    position: relative;
+    top: calc(0.36 * (var(--quote-size) - var(--caption-size)));
+    font-size: var(--caption-size);
+    font-weight: 700;
+    line-height: var(--line);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c0124f;
+  }
+
+  figcaption::before {
+    content: "\2014\00A0";
+  }
+
+  @media (max-width: 480px) {
+    .frame {
+      padding: 0.6rem;
+      border-width: 7px;
+    }
+
+    figure {
+      padding-inline: 0.75rem;
+    }
+
+    blockquote {
+      letter-spacing: 0.06em;
+    }
+  }
+</style>

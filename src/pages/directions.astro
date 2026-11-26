@@ -1,0 +1,39 @@
+---
+import Directions from "../components/Directions.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Google's allowlist for the Maps JavaScript API:
+// https://developers.google.com/maps/documentation/javascript/content-security-policy
+const google = [
+  "https://*.googleapis.com",
+  "https://*.gstatic.com",
+  "https://*.google.com",
+];
+const csp = Astro.csp;
+if (csp) {
+  [
+    "'self'",
+    ...google,
+    "https://*.ggpht.com",
+    "https://*.googleusercontent.com",
+    "blob:",
+  ].forEach((resource) => csp.insertScriptResource(resource));
+  // Maps injects <style> elements that the build can't hash.
+  ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"].forEach(
+    (resource) => csp.insertStyleResource(resource),
+  );
+  (
+    [
+      `img-src 'self' data: ${google.join(" ")} https://*.googleusercontent.com`,
+      `connect-src 'self' ${google.join(" ")} data: blob:`,
+      "font-src 'self' https://fonts.gstatic.com",
+      "frame-src https://*.google.com",
+      "worker-src blob:",
+    ] as const
+  ).forEach((directive) => csp.insertDirective(directive));
+}
+---
+
+<BaseLayout title="Directions | Just Take Colfax">
+  <Directions />
+</BaseLayout>

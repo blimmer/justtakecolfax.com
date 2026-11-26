@@ -1,0 +1,18 @@
+[settings]
+idiomatic_version_file_enable_tools = ["pnpm"]
+
+[tools]
+node = "26.13.1"
+
+[tasks.setup]
+description = "Install dependencies and create .env"
+run = '''
+pnpm install
+if key=$(op read --no-newline "op://Private/justtakecolfax.com Google Maps dev key/credential" 2>/dev/null); then
+  printf 'GOOGLE_MAPS_API_KEY=%s\n' "$key" > .env
+  echo "Wrote the dev Google Maps key from 1Password to .env."
+elif [ ! -f .env ]; then
+  cp .env.example .env
+  echo "Created .env. Add your Google Maps key to it."
+fi
+'''
